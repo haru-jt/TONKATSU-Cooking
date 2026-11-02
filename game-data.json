@@ -1,0 +1,87 @@
+{
+  "title": "とんかつ職人 DELUXE",
+  "version": "3.0.0",
+  "language": "ja",
+  "stages": [
+    {
+      "id": "prep",
+      "name": "下ごしらえ",
+      "drag_drop": [
+        "pork",
+        "salt"
+      ]
+    },
+    {
+      "id": "breading",
+      "name": "衣付け",
+      "drag_drop_order": [
+        "flour",
+        "egg",
+        "panko"
+      ]
+    },
+    {
+      "id": "frying",
+      "name": "揚げる",
+      "controls": [
+        "oil_temperature",
+        "rotate",
+        "flip"
+      ],
+      "simulations": [
+        "oiliness_at_low_temperature",
+        "burning_at_high_temperature",
+        "center_temperature",
+        "browning",
+        "bubbles"
+      ]
+    },
+    {
+      "id": "cutting",
+      "name": "カット",
+      "knife_slices": 5
+    },
+    {
+      "id": "cabbage",
+      "name": "千切り",
+      "chop_actions": 8
+    },
+    {
+      "id": "serving",
+      "name": "提供",
+      "customer_reactions": [
+        "excellent",
+        "good",
+        "average",
+        "needs_practice"
+      ]
+    }
+  ],
+  "simulation": {
+    "oil_temperature_celsius": {
+      "min": 130,
+      "max": 210,
+      "recommended": 170
+    },
+    "center_temperature_display": {
+      "unit": "℃",
+      "target_game_threshold": 72
+    },
+    "note": "ゲーム内の簡易演出用モデルであり、実際の調理安全性を保証する温度計ではありません。"
+  },
+  "rendering": {
+    "mode": "Full 3D WebGL kitchen",
+    "library": "Three.js r160",
+    "features": [
+      "complete restaurant kitchen environment with tiled walls, shelves, lamps and stainless preparation island",
+      "3D raw pork loin with fat cap and marbling, seasoning shakers and breading bowls",
+      "chef knife with steel blade and wooden handle",
+      "whole cabbage, outer leaves and individually modelled shredded cabbage",
+      "gas stove, stainless frying pan, oil, animated bubbles and tonkatsu with panko crumbs",
+      "finished meal with plate, cutlet slices, rice, miso soup, cabbage garnish and sauce",
+      "3D customer with face, hair, shirt, apron, chair and animated eating reaction",
+      "stage-aware camera views, drag-to-rotate and responsive layout"
+    ],
+    "requirement": "Three.js is loaded from jsDelivr CDN; internet connection is required for the 3D scene."
+  }
+}

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>とんかつ職人 DELUXE</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="app">
+  <header class="header">
+    <div><div class="eyebrow">REAL COOKING SIMULATOR</div><h1>とんかつ職人 <span>DELUXE</span></h1><p>揚げて、切って、盛り付けて。最高の一皿をお客さんへ！</p></div>
+    <div class="hud"><div><small>スコア</small><b id="score">0</b></div><div><small>工程</small><b id="stageNum">1 / 6</b></div></div>
+  </header>
+  <section class="order"><span class="order-emoji">🍽️</span><div><b>注文：特製ロースかつ定食</b><small>衣はサクサク、お肉はジューシー。丁寧な調理を心がけよう。</small></div><span class="order-id">ORDER #007</span></section>
+
+  <div class="layout">
+    <section class="work">
+      <div class="stage-head"><div><small id="step">STEP 01</small><h2 id="stageTitle">下ごしらえ</h2></div><div class="progress"><i id="progress"></i></div></div>
+      <div class="station" id="station">
+        <div class="station-bar"><span id="stationName">PREPARATION</span><span id="stationHint">食材を順番にトレーへ</span></div>
+        <div class="three-stage full-kitchen" id="threeStage">
+          <canvas id="threeCanvas" aria-label="厨房全体、調理器具、食材、お客さんを表示する3Dシーン"></canvas>
+          <div class="three-loading" id="threeLoading">立体厨房を準備中…</div>
+          <div class="three-caption" id="threeCaption">下ごしらえ：豚ロースを準備しよう</div>
+        </div>
+
+        <section id="prepView" class="prep-view">
+          <div class="ingredient-rack" id="ingredientRack">
+            <button class="ingredient" draggable="true" data-id="pork"><span>🥩</span><b>豚ロース</b><small>厚切り 150g</small></button>
+            <button class="ingredient" draggable="true" data-id="salt"><span>🧂</span><b>塩こしょう</b><small>下味をつける</small></button>
+            <button class="ingredient" draggable="true" data-id="flour"><span>🌾</span><b>小麦粉</b><small>薄くまぶす</small></button>
+            <button class="ingredient" draggable="true" data-id="egg"><span>🥚</span><b>溶き卵</b><small>全体につける</small></button>
+            <button class="ingredient" draggable="true" data-id="panko"><span>🍞</span><b>パン粉</b><small>ふんわり包む</small></button>
+          </div>
+          <div class="drop-tray" id="dropTray"><div class="tray-emoji">🧺</div><h3 id="trayTitle">ここに食材をドロップ</h3><p id="trayText">左の食材をドラッグ＆ドロップ！</p><div id="trayItems"></div></div>
+        </section>
+
+        <section id="fryView" class="fry-view hidden">
+          <div class="fry-scene">
+            <div class="pan3d" id="fryDropZone" aria-label="フライパン。とんかつをここへ入れる">
+              <div class="oil-surface"><div class="oil-ripple"></div></div>
+              <div class="cutlet-3d" id="cutlet"><span class="crust"></span><span class="cutlet-edge"></span></div>
+              <div class="bubbles" id="bubbles"></div>
+              <div class="pan-guide" id="panGuide">とんかつをここへ<br>ドラッグ！</div>
+            </div>
+            <div class="drag-cutlet" id="dragCutlet" draggable="true">
+              <span>🥩</span><b>衣付きとんかつ</b><small>つかんでフライパンへ</small>
+            </div>
+            <div class="scene-controls">
+              <button class="small-btn" id="rotateLeft">↶ 回転</button>
+              <button class="small-btn" id="flipCutlet" disabled>⇅ 裏返す</button>
+              <button class="small-btn" id="rotateRight">回転 ↷</button>
+            </div>
+            <div class="fry-status"><span id="surfaceState">衣：きつね色前</span><span id="oilState">油：適温</span></div>
+            <div class="fry-steps" id="frySteps">
+              <span class="active">① 油を温める</span><span>② とんかつ投入</span><span>③ 裏返す</span><span>④ 中まで加熱</span>
+            </div>
+          </div>
+          <div class="fry-panel">
+            <label>油の温度 <b id="tempLabel">170℃</b></label>
+            <input id="temp" type="range" min="130" max="210" value="170">
+            <div class="range"><span>130℃ 低温</span><span>210℃ 高温</span></div>
+            <div class="meters">
+              <div><small>揚げ時間</small><b id="time">0.0秒</b></div>
+              <div><small>肉の中心温度</small><b id="core">5℃</b></div>
+              <div><small>火の通り</small><b id="doneness">生</b></div>
+            </div>
+            <div class="core-track"><i id="coreBar"></i></div>
+            <div class="oil-warning" id="oilWarning">170℃前後をキープして揚げよう。</div>
+            <div class="fry-buttons"><button class="primary" id="fryToggle">🔥 揚げ始める</button><button class="soft" id="stopFry">揚げ具合を確認</button></div>
+            <small class="hint">回転・裏返しで焼きムラを防ごう。中心温度はゲーム内の目安です。</small>
+          </div>
+        </section>
+
+        <section id="cutView" class="cut-view hidden">
+          <div class="cut-board"><div class="board-label">まな板</div><div class="cooked-cutlet" id="wholeCutlet"><span></span></div><div class="knife" id="knife">🔪</div><div class="cut-lines" id="cutLines"></div></div>
+          <div class="task-copy"><h3>包丁で食べやすく切ろう</h3><p>とんかつをクリックして、ガイドに沿ってカット！</p><div class="task-count"><b id="cutCount">0</b> / 5 カット</div><button class="primary" id="cutButton">🔪 切る</button></div>
+        </section>
+
+        <section id="cabbageView" class="cabbage-view hidden">
+          <div class="cabbage-board"><div class="board-label">キャベツの千切り</div><div class="cabbage-head" id="cabbageHead">🥬</div><div class="shreds" id="shreds"></div><div class="knife cabbage-knife" id="cabbageKnife">🔪</div></div>
+          <div class="task-copy"><h3>キャベツを千切りにしよう</h3><p>ボタンを押してリズムよく刻もう！</p><div class="task-count"><b id="shredCount">0</b> / 8 回</div><button class="primary" id="shredButton">トントン！</button></div>
+        </section>
+
+        <section id="serveView" class="serve-view hidden">
+          <div class="meal-plate"><div class="rice">🍚</div><div class="cabbage-garnish">🥬</div><div class="miso">🥣</div><div class="sliced-tonkatsu" id="servedCutlet">🍖</div></div>
+          <div class="customer-area"><div class="customer-face" id="customerFace">😋</div><h3 id="customerTitle">お客さんが待っています</h3><p id="customerText">できたての定食を提供しよう！</p><div class="reaction-stars" id="stars">☆☆☆☆☆</div><button class="primary" id="serveButton">🍽️ お客さんに提供する</button></div>
+        </section>
+      </div>
+      <div class="feedback" id="feedback">豚ロースをトレーに移動しよう。</div>
+      <div class="bottom"><button class="soft" id="reset">最初から</button><button class="primary" id="next" disabled>次の工程へ →</button></div>
+    </section>
+
+    <aside class="sidebar">
+      <section class="side-card"><h3>調理工程</h3><ol id="stepList">
+        <li class="active"><i>1</i><span>下ごしらえ<small>お肉と下味</small></span></li>
+        <li><i>2</i><span>衣をつける<small>粉・卵・パン粉</small></span></li>
+        <li><i>3</i><span>油で揚げる<small>温度・焼き色・中心温度</small></span></li>
+        <li><i>4</i><span>カットする<small>包丁で5回</small></span></li>
+        <li><i>5</i><span>千切りキャベツ<small>リズムよく刻む</small></span></li>
+        <li><i>6</i><span>提供する<small>お客さんの反応</small></span></li>
+      </ol></section>
+      <section class="side-card chef"><h3>職人のアドバイス</h3><div>👨‍🍳</div><p id="tip">まずはお肉の水分をふき取り、塩こしょうで下味をつけよう。</p></section>
+      <section class="side-card"><h3>品質スコア</h3><div class="quality-row"><span>現在の評価</span><b id="quality">0%</b></div><div class="quality-track"><i id="qualityBar"></i></div><small class="muted">正確な操作で高評価を目指そう。</small></section>
+    </aside>
+  </div>
+  <footer>とんかつ職人 DELUXE ・ 3D風調理演出 ・ 温度／中心温度シミュレーション</footer>
+</main>
+<div class="toast" id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script src="tonkatsu-3d.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
